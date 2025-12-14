@@ -1,5 +1,5 @@
 const express = require("express");
-const { auth, admin } = require("../middleware/auth");
+const { auth, admin } = require("../middlewares/auth");
 
 const {
   addSweet,
