@@ -7,6 +7,7 @@ const cors=require('cors')
 const connectDB=require('./src/config/db')
 const app = express();
 const userRoutes = require('./src/routes/userRoutes')
+const sweetRoutes = require("./src/routes/sweetRoutes")
 
 app.use(express.json());
 app.use(cors());
@@ -18,9 +19,7 @@ connectDB();
 
 //Middleware
 app.use("/api/auth", userRoutes)
-
-
-app.use("/api/users", userRoutes)
+app.use("/api/sweets", sweetRoutes)
 
 
 //route
