@@ -127,7 +127,7 @@ const purchaseSweet = async (req, res) => {
       return res.status(400).json({ message: "Item is out of stock" });
     }
 
-    sweet.quantity = -1;
+    sweet.quantity = sweet.quantity = -1;
     await sweet.save();
 
     res.json({
@@ -145,22 +145,34 @@ const purchaseSweet = async (req, res) => {
 
 const restockSweet = async (req, res) => {
   try {
-    const { amout } = req.body;
+    // 1. Get amount from request body
+    const amount = req.body.amount;
 
-    if (!amount || amount <= 0) {
+    // 2. Validate amount
+    if (amount === undefined) {
+      return res.status(400).json({ message: "amount is required" });
+    }
+
+    if (amount <= 0) {
       return res
         .status(400)
-        .json({ message: "Correct restock amount required" });
+        .json({ message: "amount must be greater than 0" });
     }
+
+    // 3. Find the sweet
     const sweet = await Sweet.findById(req.params.id);
 
     if (!sweet) {
       return res.status(404).json({ message: "Sweet not found" });
     }
 
-    sweet.quantity += Number(amount);
+    // 4. Increase quantity
+    sweet.quantity = sweet.quantity + amount;
+
+    // 5. Save updated sweet
     await sweet.save();
 
+    // 6. Send response
     res.json({
       message: "Sweet restocked successfully",
       sweet,
@@ -169,6 +181,7 @@ const restockSweet = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 module.exports =
 {
