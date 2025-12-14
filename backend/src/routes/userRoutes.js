@@ -7,4 +7,4 @@ router.post("/register", register)
 router.post("./login", login)
 
 
-module.epxorts= router;
+module.exports= router;

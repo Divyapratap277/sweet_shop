@@ -1,3 +1,4 @@
+
 const dotenv = require("dotenv")
 dotenv.config()
 
@@ -16,8 +17,8 @@ connectDB();
 
 
 //Middleware
-app.use("/api/auth", authRoutes)
-app.use("/api/sweets", sweetRoutes)
+app.use("/api/auth", userRoutes)
+
 
 app.use("/api/users", userRoutes)
 
