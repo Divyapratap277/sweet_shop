@@ -1,20 +1,34 @@
-const jwt  = require("jsonwebtoken")
-const User = require('../models/User')
+const jwt = require("jsonwebtoken");
 
+const auth = (req, res, next) => {
+  let token;
 
-
-module.exports = function (req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
   if (!token) {
-    return res.status(401).json({ msg: "No token, authorization denied" });
+    return res.status(401).json({ message: "Not authorized, no token" });
   }
 
   try {
-    const decoded = jwt.verify(token, "jwtsecretkey"); // must match controller
-    req.user = decoded; // { id, role }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; 
     next();
   } catch (error) {
-    return res.status(401).json({ msg: "Token is not valid" });
+    return res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
+
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access only" });
+  }
+};
+
+module.exports = {auth , admin};
